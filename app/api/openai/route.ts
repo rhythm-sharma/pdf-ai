@@ -1,7 +1,7 @@
 import openai from "@/utils/openai";
 import { NextResponse } from "next/server";
 
-export const maxDuration = 300;
+export const maxDuration = 60;
 
 export async function POST(req: Request) {
   try {
