@@ -64,9 +64,9 @@ export function PDFCreateButton({
 
     const title = data.title;
 
-    const pdf: any = localStorage.getItem("pdf")
+    const pdf: any = window.localStorage.getItem("pdf")
       ? // @ts-ignore:next-line
-        JSON.parse(localStorage.getItem("pdf"))
+        JSON.parse(window.localStorage.getItem("pdf"))
       : [];
 
     let newPdf = [...pdf];
@@ -91,8 +91,8 @@ export function PDFCreateButton({
       ];
     }
 
-    // store it into localstorage
-    localStorage.setItem("pdf", JSON.stringify(newPdf));
+    // store it into window.localStorage
+    window.localStorage.setItem("pdf", JSON.stringify(newPdf));
 
     // This forces a cache invalidation.
     router.refresh();

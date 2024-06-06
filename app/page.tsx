@@ -3,12 +3,19 @@
 import { EmptyPlaceholder } from "@/components/empty-placeholder";
 import { PDFCreateButton } from "@/components/pdf-create-button";
 import { PdfItem } from "@/components/pdf-item";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const pdfs = localStorage.getItem("pdf")
-    ? // @ts-ignore:next-line
-      JSON.parse(localStorage.getItem("pdf"))
-    : [];
+  const [pdfs, setPdfs] = useState([]);
+
+  useEffect(() => {
+    const pdfs = window.localStorage.getItem("pdf")
+      ? // @ts-ignore:next-line
+        JSON.parse(window.localStorage.getItem("pdf"))
+      : [];
+
+    setPdfs(pdfs);
+  }, []);
 
   return (
     <>

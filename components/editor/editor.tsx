@@ -33,9 +33,9 @@ const Editor = ({ editorId }: EditorProps) => {
   const quill = useRef();
 
   useEffect(() => {
-    const pdfs: any = localStorage.getItem("pdf")
+    const pdfs: any = window.localStorage.getItem("pdf")
       ? // @ts-ignore:next-line
-        JSON.parse(localStorage.getItem("pdf"))
+        JSON.parse(window.localStorage.getItem("pdf"))
       : [];
 
     // @ts-ignore:next-line
@@ -50,7 +50,7 @@ const Editor = ({ editorId }: EditorProps) => {
     (value: string) => {
       setValue(value);
       // @ts-ignore:next-line
-      const pdf = JSON.parse(localStorage.getItem("pdf"));
+      const pdf = JSON.parse(window.localStorage.getItem("pdf"));
 
       const newPdf = pdf.map((item: any) => {
         if (`${item.id}` === `${editorId}`) {
@@ -64,7 +64,7 @@ const Editor = ({ editorId }: EditorProps) => {
         }
       });
 
-      localStorage.setItem("pdf", JSON.stringify(newPdf));
+      window.localStorage.setItem("pdf", JSON.stringify(newPdf));
     },
     [editorId]
   );
