@@ -11,7 +11,7 @@ export default function ExportPdfButton({}) {
       target: ".ql-editor",
       name: "PDF_WITH_AI",
       orientation: "p",
-      resize: false,
+      resize: true,
       debug: false,
     });
   }, []);

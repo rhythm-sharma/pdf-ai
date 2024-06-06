@@ -33,7 +33,6 @@ export async function POST(req: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.log("[CONVERSATION_ERROR]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }
