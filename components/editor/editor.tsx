@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import TextareaAutosize from "react-textarea-autosize";
 
 // Importing core components
 import QuillEditor, { Quill } from "react-quill";
@@ -18,14 +19,53 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 
 Quill.register("modules/imageResize", ImageResize);
 
-const Editor = () => {
+interface EditorProps {
+  editorId: string;
+}
+
+const Editor = ({ editorId }: EditorProps) => {
   const [value, setValue] = useState("");
+  const [title, setTitle] = useState("");
   const [openAIApiStatus, setOpenAIApiStatus] = useState("");
   const [dallEApiStatus, setDallEApiStatus] = useState("");
   const [aiInputText, setAiInputText] = useState("");
   const [imagePrompt, setImagePrompt] = useState("");
 
   const quill = useRef();
+
+  useEffect(() => {
+    const pdfs: any = localStorage.getItem("pdf")
+      ? JSON.parse(localStorage.getItem("pdf"))
+      : [];
+
+    const pdf = pdfs.find(({ id }) => `${id}` === `${editorId}`);
+    console.log("pdfs", pdf);
+
+    setValue(pdf.content);
+    setTitle(pdf.title);
+  }, [setValue, editorId]);
+
+  const updateContentById = useCallback(
+    (value: string) => {
+      setValue(value);
+      const pdf = JSON.parse(localStorage.getItem("pdf"));
+
+      const newPdf = pdf.map((item: any) => {
+        if (`${item.id}` === `${editorId}`) {
+          return {
+            id: item.id,
+            title: item.title,
+            content: value,
+          };
+        } else {
+          return item;
+        }
+      });
+
+      localStorage.setItem("pdf", JSON.stringify(newPdf));
+    },
+    [editorId]
+  );
 
   const generateAIText = (text: string) => {
     setOpenAIApiStatus("loading");
@@ -39,7 +79,8 @@ const Editor = () => {
       .then((data) => {
         const newVal = `${value} <p>${data?.message?.content}</p>`;
 
-        setValue(newVal);
+        // setValue(newVal);
+        updateContentById(newVal);
 
         // this will update the innerHTML in
         // @ts-ignore:next-line
@@ -73,9 +114,8 @@ const Editor = () => {
 
         const newVal = `${value} <img src="${data.message}"></img>`;
 
-        console.log("newVal: ", newVal);
-
-        setValue(newVal);
+        // setValue(newVal);
+        updateContentById(newVal);
 
         // this will update the innerHTML in editor
         // @ts-ignore:next-line
@@ -117,12 +157,13 @@ const Editor = () => {
         // Get the current selection range and insert the image at that index
         const range = quillEditor.getSelection(true);
         quillEditor.insertEmbed(range.index, "image", imageUrl, "user");
-        setValue(quillEditor.root.innerHTML);
+        // setValue(quillEditor.root.innerHTML);
+        updateContentById(quillEditor.root.innerHTML);
       };
 
       reader.readAsDataURL(file);
     };
-  }, []);
+  }, [updateContentById]);
 
   const modules = useMemo(
     () => ({
@@ -172,13 +213,10 @@ const Editor = () => {
   ];
 
   return (
-    <div className={"container mt-10"}>
+    <div className={"container"}>
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center space-x-10">
-          <Link
-            href="/dashboard"
-            className={cn(buttonVariants({ variant: "ghost" }))}
-          >
+          <Link href="/" className={cn(buttonVariants({ variant: "ghost" }))}>
             <>
               <Icons.chevronLeft className="mr-2 h-4 w-4" />
               Back
@@ -187,6 +225,8 @@ const Editor = () => {
         </div>
         <ExportPdfButton />
       </div>
+
+      <p className="text-3xl mt-5 font-bold">{title}</p>
 
       <AiContextMenu
         generateAIText={generateAIText}
@@ -222,7 +262,7 @@ const Editor = () => {
             formats={formats}
             modules={modules}
             onChange={(value) => {
-              setValue(value);
+              updateContentById(value);
             }}
           />
         </div>

@@ -19,7 +19,7 @@ export default function ExportPdfButton({}) {
   return (
     <Button onClick={exportToPdf}>
       <Icons.download className="w-[16px] h-[16px] mr-2" />
-      Export PDF
+      Export As PDF
     </Button>
   );
 }
