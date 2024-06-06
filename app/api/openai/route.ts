@@ -1,6 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import openai from "@/utils/openai";
 import { NextResponse } from "next/server";
+
+export const maxDuration = 300;
 
 export async function POST(req: Request) {
   try {
