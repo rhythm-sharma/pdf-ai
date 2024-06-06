@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
-import TextareaAutosize from "react-textarea-autosize";
 
 // Importing core components
 import QuillEditor, { Quill } from "react-quill";
@@ -35,9 +34,11 @@ const Editor = ({ editorId }: EditorProps) => {
 
   useEffect(() => {
     const pdfs: any = localStorage.getItem("pdf")
-      ? JSON.parse(localStorage.getItem("pdf"))
+      ? // @ts-ignore:next-line
+        JSON.parse(localStorage.getItem("pdf"))
       : [];
 
+    // @ts-ignore:next-line
     const pdf = pdfs.find(({ id }) => `${id}` === `${editorId}`);
     console.log("pdfs", pdf);
 
@@ -48,6 +49,7 @@ const Editor = ({ editorId }: EditorProps) => {
   const updateContentById = useCallback(
     (value: string) => {
       setValue(value);
+      // @ts-ignore:next-line
       const pdf = JSON.parse(localStorage.getItem("pdf"));
 
       const newPdf = pdf.map((item: any) => {

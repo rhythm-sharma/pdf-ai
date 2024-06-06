@@ -6,7 +6,8 @@ import { PdfItem } from "@/components/pdf-item";
 
 export default function Home() {
   const pdfs = localStorage.getItem("pdf")
-    ? JSON.parse(localStorage.getItem("pdf"))
+    ? // @ts-ignore:next-line
+      JSON.parse(localStorage.getItem("pdf"))
     : [];
 
   return (

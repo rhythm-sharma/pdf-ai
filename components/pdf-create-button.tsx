@@ -4,8 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
-import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
-import { Icons } from "@/components/icons";
+import { Button, ButtonProps } from "@/components/ui/button";
 import { ReloadIcon } from "@radix-ui/react-icons";
 
 import { Input } from "@/components/ui/input";
@@ -22,7 +21,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -67,7 +65,8 @@ export function PDFCreateButton({
     const title = data.title;
 
     const pdf: any = localStorage.getItem("pdf")
-      ? JSON.parse(localStorage.getItem("pdf"))
+      ? // @ts-ignore:next-line
+        JSON.parse(localStorage.getItem("pdf"))
       : [];
 
     let newPdf = [...pdf];
